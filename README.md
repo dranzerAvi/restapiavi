@@ -1,2 +1,2 @@
 # restapiavi
-Basic CRUD for mongoldb, ready to use in flutter
+Basic CRUD for mongodb, ready to use in flutter

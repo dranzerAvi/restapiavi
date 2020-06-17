@@ -6,7 +6,7 @@ var mongodb = require('mongodb');
 
 var mongoClient = mongodb.MongoClient;
 var url = "mongodb://localhost:27017/";
-
+// var url="mongodb+srv://dbUser:dbUser@restapiavicluster-7kqdb.mongodb.net/<dbname>?retryWrites=true&w=majority";
 //Basic root route
 router.get('/', (req, res) => {
   res.send('We are on posts');
@@ -29,7 +29,7 @@ router.get('/createdatabase', (req, res) => {
 });
 
 //To create a new collection
-router.get('/createdatabase', (req, res) => {
+router.get('/createcollection', (req, res) => {
   mongoClient.connect(url, function(error, databases) {
     if (error) {
       throw error;
@@ -57,8 +57,12 @@ router.post('/add1docu', (req, res) => {
     var nodetestDB = databases.db("allposts"); //here
     var customersCollection = nodetestDB.collection("posts");
     var customer = {
-      title: req.body.title,
-      description: req.body.description
+      custName: req.body.custName,
+      custAddress: req.body.custAddress,
+      custPhno: req.body.custPhno,
+      pickupAddress:req.body.pickupAddress,
+      destAddress:req.body.destAddress,
+      status:req.body.status
     };
 
     customersCollection.insertOne(customer, function(error, response) {
@@ -97,7 +101,7 @@ router.post('/addmanydocu', (req, res) => {
 
 });
 
-//to find a single document from the collection using a singlefield (title)
+//to find a single document from the collection using customer name
 router.post('/findadocu', (req, res) => {
   mongoClient.connect(url, function(error, databases) {
     if (error) {
@@ -107,7 +111,7 @@ router.post('/findadocu', (req, res) => {
     var nodtst = databases.db("allposts");
 
     nodtst.collection("posts").findOne({
-      title: req.body.title
+      custName: req.body.custName
     }, function(err, result) {
       if (err) throw err;
       console.log("one record is find now....." + result.title + ", " + result.description);
@@ -117,7 +121,7 @@ router.post('/findadocu', (req, res) => {
   })
 });
 
-//to find multiple documents of a particular title
+//to find multiple documents of a particular customer
 router.post('/findmultiple', (req, res) => {
   mongoClient.connect(url, function(error, databases) {
     if (error) {
@@ -127,13 +131,13 @@ router.post('/findmultiple', (req, res) => {
 
     var nodtst = databases.db("allposts");
     nodtst.collection("posts").find({
-      title: req.body.title
+      custName: req.body.custName
     }).toArray(function(err, totalposts) {
       if (err) throw err;
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
-        console.log(post.title + ", " + post.description);
+        console.log(post.custName + ", " + post.custPhno);
       }
       res.send(totalposts);
     });
@@ -141,7 +145,7 @@ router.post('/findmultiple', (req, res) => {
 });
 //to list all documents
 router.get('/listall', (req, res) => {
-  mongoClient.connect(url, function(error, databases) {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
     if (error) {
       throw error;
 
@@ -153,7 +157,7 @@ router.get('/listall', (req, res) => {
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
-        console.log(post.title + ", " + post.description);
+        console.log(post.custName + ", " + post.custPhno);
       }
       res.send(totalposts);
 
@@ -172,11 +176,11 @@ router.post('/updateone', (req, res) => {
     }
     var nodtst = databases.db("allposts");
     var whereClause = {
-      title: req.body.title
+      custName: req.body.custName
     };
     var newvalues = {
       $set: {
-        title: req.body.newTitle
+        custName: req.body.newCustName
       }
     };
     nodtst.collection("posts").updateOne(whereClause, newvalues, function(err, res) {
@@ -203,11 +207,11 @@ router.post('/updatemany', (req, res) => {
     }
     var nodeDB = databases.db("allposts"); //here
     var myquery = {
-      description: req.body.searchDescription
+      custName: req.body.custName
     };
     var newvalues = {
       $set: {
-        title: req.body.newTitle
+        custAddress: req.body.newCustAddress
       }
     };
     nodeDB.collection("posts").updateMany(myquery, newvalues, function(err, res) {

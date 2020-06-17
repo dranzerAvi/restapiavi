@@ -3,10 +3,10 @@ const router = express.Router();
 const Post = require('../models/Post');
 
 var mongodb = require('mongodb');
-
+var mongoose=require('mongoose')
 var mongoClient = mongodb.MongoClient;
 var url = "mongodb://localhost:27017/";
-
+// var url="mongodb+srv://dbUser:dbUser@restapiavicluster-7kqdb.mongodb.net/<dbname>?retryWrites=true&w=majority";
 //Basic root route
 router.get('/', (req, res) => {
   res.send('We are on posts');
@@ -29,8 +29,13 @@ router.get('/createDatabase', (req, res) => {
 });
 
 //To create a new collection
+<<<<<<< HEAD
 router.get('/createCollection', (req, res) => {
   mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+=======
+router.get('/createcollection', (req, res) => {
+  mongoClient.connect(url, function(error, databases) {
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
     if (error) {
       throw error;
 
@@ -54,6 +59,7 @@ router.post('/addSingle', (req, res) => {
     if (err) {
       throw err;
     }
+<<<<<<< HEAD
     var nodetestDB = databases.db("moverzFax"); //here
     var postCollection = nodetestDB.collection("posts");
     var post = {
@@ -63,6 +69,17 @@ router.post('/addSingle', (req, res) => {
         pickupAddress:req.body.pickupAddress,
         destAddress:req.body.destAddress,
         status:req.body.status
+=======
+    var nodetestDB = databases.db("allposts"); //here
+    var customersCollection = nodetestDB.collection("posts");
+    var customer = {
+      custName: req.body.custName,
+      custAddress: req.body.custAddress,
+      custPhno: req.body.custPhno,
+      pickupAddress:req.body.pickupAddress,
+      destAddress:req.body.destAddress,
+      status:req.body.status
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
     };
 
     postCollection.insertOne(post, function(error, response) {
@@ -101,9 +118,15 @@ router.post('/addMultiple', (req, res) => {
 
 });
 
+<<<<<<< HEAD
 //to find a single document from the collection using a singlefield (title)
 router.post('/findByName', (req, res) => {
   mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+=======
+//to find a single document from the collection using customer name
+router.post('/findadocu', (req, res) => {
+  mongoClient.connect(url, function(error, databases) {
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
     if (error) {
       throw error;
 
@@ -111,7 +134,11 @@ router.post('/findByName', (req, res) => {
     var nodtst = databases.db("moverzFax");
 
     nodtst.collection("posts").findOne({
+<<<<<<< HEAD
         custName: req.body.custName
+=======
+      custName: req.body.custName
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
     }, function(err, result) {
       if (err) throw err;
       console.log("one record is found....." + result.custName + ", " + result.custPhno);
@@ -121,7 +148,7 @@ router.post('/findByName', (req, res) => {
   })
 });
 
-//to find multiple documents of a particular title
+//to find multiple documents of a particular customer
 router.post('/findmultiple', (req, res) => {
   mongoClient.connect(url, { useUnifiedTopology: true },function(error, databases) {
     if (error) {
@@ -131,21 +158,30 @@ router.post('/findmultiple', (req, res) => {
 
     var nodtst = databases.db("moverzFax");
     nodtst.collection("posts").find({
-      title: req.body.title
+      custName: req.body.custName
     }).toArray(function(err, totalposts) {
       if (err) throw err;
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
+<<<<<<< HEAD
         console.log(post.custName + ", " + post.custPhno);
+=======
+        console.log(post.custName + ", " + post.custPhno+","+post.status);
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
       }
       res.send(totalposts);
     });
   });
 });
 //to list all documents
+<<<<<<< HEAD
 router.get('/listAll', (req, res) => {
   mongoClient.connect(url, { useUnifiedTopology: true },function(error, databases) {
+=======
+router.get('/listall', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
     if (error) {
       throw error;
 
@@ -157,7 +193,11 @@ router.get('/listAll', (req, res) => {
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
+<<<<<<< HEAD
         console.log(post.custName + ", " + post.custPhno);
+=======
+        console.log(post.custName + ", " + post.custPhno+","+post.status);
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
       }
       res.send(totalposts);
 
@@ -198,6 +238,41 @@ router.post('/updateUseAddress', (req, res) => {
 
 //To update docimen t using id
 
+<<<<<<< HEAD
+=======
+//To update a document using address
+router.post('/updateOneUseAddress', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+    if (error) {
+      throw error;
+
+    }
+    console.log(req.body.custId);
+    var nodtst = databases.db("allposts");
+    var whereClause = {
+      custAddress:req.body.custAddress
+    };
+    var newvalues = {
+      $set: {
+        status: "Alloted"
+      }
+    };
+    nodtst.collection("posts").updateOne(whereClause, newvalues, function(err, res) {
+      if (error) {
+        throw error;
+
+      }
+      console.log("Document updated");
+      databases.close();
+    });
+
+  });
+
+});
+
+//To update docimen t using id
+
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
 router.post('/updateOneUseId', (req, res) => {
   mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
     if (error) {
@@ -205,7 +280,11 @@ router.post('/updateOneUseId', (req, res) => {
 
     }
     console.log(req.body.custId);
+<<<<<<< HEAD
     var nodtst = databases.db("moverzFax");
+=======
+    var nodtst = databases.db("allposts");
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
     var whereClause = {
       _id:mongoose.Types.ObjectId(req.body.custId)
     };
@@ -237,7 +316,11 @@ router.post('/updatemany', (req, res) => {
     }
     var nodeDB = databases.db("moverzFax"); //here
     var myquery = {
+<<<<<<< HEAD
     custName: req.body.custName
+=======
+      custName: req.body.custName
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
     };
     var newvalues = {
       $set: {
@@ -256,4 +339,11 @@ router.post('/updatemany', (req, res) => {
 
 });
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 3b79c7585ec49786b6e81fdf8cafaf93021caf4c
 module.exports = router;

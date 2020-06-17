@@ -3,7 +3,7 @@ const router = express.Router();
 const Post = require('../models/Post');
 
 var mongodb = require('mongodb');
-
+var mongoose=require('mongoose')
 var mongoClient = mongodb.MongoClient;
 var url = "mongodb://localhost:27017/";
 // var url="mongodb+srv://dbUser:dbUser@restapiavicluster-7kqdb.mongodb.net/<dbname>?retryWrites=true&w=majority";
@@ -137,7 +137,7 @@ router.post('/findmultiple', (req, res) => {
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
-        console.log(post.custName + ", " + post.custPhno);
+        console.log(post.custName + ", " + post.custPhno+","+post.status);
       }
       res.send(totalposts);
     });
@@ -157,7 +157,7 @@ router.get('/listall', (req, res) => {
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
-        console.log(post.custName + ", " + post.custPhno);
+        console.log(post.custName + ", " + post.custPhno+","+post.status);
       }
       res.send(totalposts);
 
@@ -167,20 +167,21 @@ router.get('/listall', (req, res) => {
   });
 });
 
-//To update a document
-router.post('/updateone', (req, res) => {
-  mongoClient.connect(url, function(error, databases) {
+//To update a document using address
+router.post('/updateOneUseAddress', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
     if (error) {
       throw error;
 
     }
+    console.log(req.body.custId);
     var nodtst = databases.db("allposts");
     var whereClause = {
-      custName: req.body.custName
+      custAddress:req.body.custAddress
     };
     var newvalues = {
       $set: {
-        custName: req.body.newCustName
+        status: "Alloted"
       }
     };
     nodtst.collection("posts").updateOne(whereClause, newvalues, function(err, res) {
@@ -188,8 +189,38 @@ router.post('/updateone', (req, res) => {
         throw error;
 
       }
-      console.log(res.result.n + 1 + "document updated");
-      res.send("Document updated");
+      console.log("Document updated");
+      databases.close();
+    });
+
+  });
+
+});
+
+//To update docimen t using id
+
+router.post('/updateOneUseId', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+    if (error) {
+      throw error;
+
+    }
+    console.log(req.body.custId);
+    var nodtst = databases.db("allposts");
+    var whereClause = {
+      _id:mongoose.Types.ObjectId(req.body.custId)
+    };
+    var newvalues = {
+      $set: {
+        status: req.body.newCustStatus
+      }
+    };
+    nodtst.collection("posts").updateOne(whereClause, newvalues, function(err, res) {
+      if (error) {
+        throw error;
+
+      }
+      console.log("Document updated");
       databases.close();
     });
 

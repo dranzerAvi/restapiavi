@@ -14,14 +14,14 @@ router.get('/', (req, res) => {
 
 
 //To create a new database
-router.get('/createdatabase', (req, res) => {
-  mongoClient.connect(url, function(error, databases) { // use for to connect to the databases
+router.get('/createDatabase', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) { // use for to connect to the databases
     if (error) {
       throw error;
 
     }
-    var dbobject = databases.db('allposts'); //use for create database
-    console.log("databases is created")
+    var dbobject = databases.db('moverzFax'); //use for create database
+    console.log("database is created")
     databases.close();
 
   });
@@ -29,13 +29,13 @@ router.get('/createdatabase', (req, res) => {
 });
 
 //To create a new collection
-router.get('/createdatabase', (req, res) => {
-  mongoClient.connect(url, function(error, databases) {
+router.get('/createCollection', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
     if (error) {
       throw error;
 
     }
-    var dbase = databases.db("allposts");
+    var dbase = databases.db("moverzFax");
     dbase.createCollection("posts", function(error, response) {
       if (error) {
         throw error;
@@ -48,20 +48,24 @@ router.get('/createdatabase', (req, res) => {
 });
 
 //To create a document
-router.post('/add1docu', (req, res) => {
+router.post('/addSingle', (req, res) => {
 
-  mongoClient.connect(url, function(err, databases) {
+  mongoClient.connect(url, { useUnifiedTopology: true },function(err, databases) {
     if (err) {
       throw err;
     }
-    var nodetestDB = databases.db("allposts"); //here
-    var customersCollection = nodetestDB.collection("posts");
-    var customer = {
-      title: req.body.title,
-      description: req.body.description
+    var nodetestDB = databases.db("moverzFax"); //here
+    var postCollection = nodetestDB.collection("posts");
+    var post = {
+      custName: req.body.custName,
+        custAddress: req.body.custAddress,
+        custPhno: req.body.custPhno,
+        pickupAddress:req.body.pickupAddress,
+        destAddress:req.body.destAddress,
+        status:req.body.status
     };
 
-    customersCollection.insertOne(customer, function(error, response) {
+    postCollection.insertOne(post, function(error, response) {
       if (error) {
         throw error;
       }
@@ -76,14 +80,14 @@ router.post('/add1docu', (req, res) => {
 
 
 //To add many docs
-router.post('/addmanydocu', (req, res) => {
+router.post('/addMultiple', (req, res) => {
 
-  mongoClient.connect(url, function(error, databases) {
+  mongoClient.connect(url, { useUnifiedTopology: true },function(error, databases) {
     if (error) {
       throw error;
 
     }
-    var nodtst = databases.db("allposts");
+    var nodtst = databases.db("moverzFax");
 
     nodtst.collection('posts').insertMany(req.body, function(error, response) {
       if (error) {
@@ -98,19 +102,19 @@ router.post('/addmanydocu', (req, res) => {
 });
 
 //to find a single document from the collection using a singlefield (title)
-router.post('/findadocu', (req, res) => {
-  mongoClient.connect(url, function(error, databases) {
+router.post('/findByName', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
     if (error) {
       throw error;
 
     }
-    var nodtst = databases.db("allposts");
+    var nodtst = databases.db("moverzFax");
 
     nodtst.collection("posts").findOne({
-      title: req.body.title
+        custName: req.body.custName
     }, function(err, result) {
       if (err) throw err;
-      console.log("one record is find now....." + result.title + ", " + result.description);
+      console.log("one record is found....." + result.custName + ", " + result.custPhno);
       res.send(result);
       databases.close();
     })
@@ -119,13 +123,13 @@ router.post('/findadocu', (req, res) => {
 
 //to find multiple documents of a particular title
 router.post('/findmultiple', (req, res) => {
-  mongoClient.connect(url, function(error, databases) {
+  mongoClient.connect(url, { useUnifiedTopology: true },function(error, databases) {
     if (error) {
       throw error;
 
     }
 
-    var nodtst = databases.db("allposts");
+    var nodtst = databases.db("moverzFax");
     nodtst.collection("posts").find({
       title: req.body.title
     }).toArray(function(err, totalposts) {
@@ -133,27 +137,27 @@ router.post('/findmultiple', (req, res) => {
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
-        console.log(post.title + ", " + post.description);
+        console.log(post.custName + ", " + post.custPhno);
       }
       res.send(totalposts);
     });
   });
 });
 //to list all documents
-router.get('/listall', (req, res) => {
-  mongoClient.connect(url, function(error, databases) {
+router.get('/listAll', (req, res) => {
+  mongoClient.connect(url, { useUnifiedTopology: true },function(error, databases) {
     if (error) {
       throw error;
 
     }
 
-    var nodtst = databases.db("allposts");
+    var nodtst = databases.db("moverzFax");
     nodtst.collection("posts").find({}).toArray(function(err, totalposts) {
       if (err) throw err;
 
       for (i = 0; i < totalposts.length; i++) {
         let post = totalposts[i];
-        console.log(post.title + ", " + post.description);
+        console.log(post.custName + ", " + post.custPhno);
       }
       res.send(totalposts);
 
@@ -162,21 +166,21 @@ router.get('/listall', (req, res) => {
     });
   });
 });
-
-//To update a document
-router.post('/updateone', (req, res) => {
-  mongoClient.connect(url, function(error, databases) {
+//To update a document using address
+router.post('/updateUseAddress', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
     if (error) {
       throw error;
 
     }
-    var nodtst = databases.db("allposts");
+    console.log(req.body.custId);
+    var nodtst = databases.db("moverzFax");
     var whereClause = {
-      title: req.body.title
+      custAddress:req.body.custAddress
     };
     var newvalues = {
       $set: {
-        title: req.body.newTitle
+        status: req.body.newCustStatus
       }
     };
     nodtst.collection("posts").updateOne(whereClause, newvalues, function(err, res) {
@@ -184,8 +188,38 @@ router.post('/updateone', (req, res) => {
         throw error;
 
       }
-      console.log(res.result.n + 1 + "document updated");
-      res.send("Document updated");
+      console.log("Document updated");
+      databases.close();
+    });
+
+  });
+
+});
+
+//To update docimen t using id
+
+router.post('/updateOneUseId', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+    if (error) {
+      throw error;
+
+    }
+    console.log(req.body.custId);
+    var nodtst = databases.db("moverzFax");
+    var whereClause = {
+      _id:mongoose.Types.ObjectId(req.body.custId)
+    };
+    var newvalues = {
+      $set: {
+        status: req.body.newCustStatus
+      }
+    };
+    nodtst.collection("posts").updateOne(whereClause, newvalues, function(err, res) {
+      if (error) {
+        throw error;
+
+      }
+      console.log("Document updated");
       databases.close();
     });
 
@@ -197,17 +231,17 @@ router.post('/updateone', (req, res) => {
 //To update multiple documents
 router.post('/updatemany', (req, res) => {
 
-  mongoClient.connect(url, function(err, databases) {
+  mongoClient.connect(url, { useUnifiedTopology: true },function(err, databases) {
     if (err) {
       throw err;
     }
-    var nodeDB = databases.db("allposts"); //here
+    var nodeDB = databases.db("moverzFax"); //here
     var myquery = {
-      description: req.body.searchDescription
+    custName: req.body.custName
     };
     var newvalues = {
       $set: {
-        title: req.body.newTitle
+        custAddress: req.body.newCustAddress
       }
     };
     nodeDB.collection("posts").updateMany(myquery, newvalues, function(err, res) {
@@ -221,9 +255,5 @@ router.post('/updatemany', (req, res) => {
   });
 
 });
-
-
-
-
 
 module.exports = router;

@@ -57,12 +57,16 @@ router.post('/addSingle', (req, res) => {
     var nodetestDB = databases.db("moverzFax"); //here
     var postCollection = nodetestDB.collection("movers");
     var post = {
-      moverName: req.body.moverName,
+        moverName: req.body.moverName,
         moverRating: req.body.moverRating,
         moverPhno: req.body.moverPhno,
         moverUSDOTNo:req.body.moverUSDOTNo,
         moverMCNo:req.body.moverMCNo,
-        moverDescription:req.body.moverDescription
+        moverDescription:req.body.moverDescription,
+        moverCountry:req.body.moverCountry,
+        moverState:req.body.moverState,
+        moverCity:req.body.moverCity,
+        moverZipCode:req.body.moverZipCode
     };
 
     postCollection.insertOne(post, function(error, response) {
@@ -142,7 +146,7 @@ router.post('/findByUSDOT', (req, res) => {
 });
 
 //to find a single document from the collection using a MCNo
-router.post('/findByUSDOT', (req, res) => {
+router.post('/findByMCNo', (req, res) => {
   mongoClient.connect(url, { useUnifiedTopology: true },function(error, databases) {
     if (error) {
       throw error;
@@ -184,6 +188,114 @@ router.post('/findmultiple', (req, res) => {
     });
   });
 });
+
+
+//to find multiple documents of a particular Name
+router.post('/detailedSearchWithoutUSDOT', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+    if (error) {
+      throw error;
+
+    }
+
+    var nodtst = databases.db("moverzFax");
+    nodtst.collection("movers").find({
+      moverMCNo:req.body.moverMCNo,
+      moverState:req.body.moverState,
+      moverCity:req.body.moverCity,
+      moverZipCode:req.body.moverZipCode,
+      moverCountry:req.body.moverCountry
+    }).toArray(function(err, totalposts) {
+      if (err) throw err;
+
+      for (i = 0; i < totalposts.length; i++) {
+        let post = totalposts[i];
+        console.log(post.moverName + ", " + post.moverDescription);
+      }
+      res.send(totalposts);
+    });
+  });
+});
+
+router.post('/detailedSearchWithoutMC', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+    if (error) {
+      throw error;
+
+    }
+
+    var nodtst = databases.db("moverzFax");
+    nodtst.collection("movers").find({
+      moverUSDOTNo: req.body.moverUSDOTNo,
+      moverState:req.body.moverState,
+      moverCity:req.body.moverCity,
+      moverZipCode:req.body.moverZipCode,
+      moverCountry:req.body.moverCountry
+    }).toArray(function(err, totalposts) {
+      if (err) throw err;
+
+      for (i = 0; i < totalposts.length; i++) {
+        let post = totalposts[i];
+        console.log(post.moverName + ", " + post.moverDescription);
+      }
+      res.send(totalposts);
+    });
+  });
+});
+
+router.post('/detailedSearch', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+    if (error) {
+      throw error;
+
+    }
+
+    var nodtst = databases.db("moverzFax");
+    nodtst.collection("movers").find({
+
+      moverState:req.body.moverState,
+      moverCity:req.body.moverCity,
+      moverZipCode:req.body.moverZipCode,
+      moverCountry:req.body.moverCountry
+    }).toArray(function(err, totalposts) {
+      if (err) throw err;
+
+      for (i = 0; i < totalposts.length; i++) {
+        let post = totalposts[i];
+        console.log(post.moverName + ", " + post.moverDescription);
+      }
+      res.send(totalposts);
+    });
+  });
+});
+
+router.post('/detailedSearchWithBothNo', (req, res) => {
+  mongoClient.connect(url,{ useUnifiedTopology: true }, function(error, databases) {
+    if (error) {
+      throw error;
+
+    }
+
+    var nodtst = databases.db("moverzFax");
+    nodtst.collection("movers").find({
+      moverMCNo:req.body.moverMCNo,
+      moverUSDOTNo: req.body.moverUSDOTNo,
+      moverState:req.body.moverState,
+      moverCity:req.body.moverCity,
+      moverZipCode:req.body.moverZipCode,
+      moverCountry:req.body.moverCountry
+    }).toArray(function(err, totalposts) {
+      if (err) throw err;
+
+      for (i = 0; i < totalposts.length; i++) {
+        let post = totalposts[i];
+        console.log(post.moverName + ", " + post.moverDescription);
+      }
+      res.send(totalposts);
+    });
+  });
+});
+
 //to list all documents
 router.get('/listAll', (req, res) => {
   mongoClient.connect(url, { useUnifiedTopology: true },function(error, databases) {
@@ -193,14 +305,14 @@ router.get('/listAll', (req, res) => {
     }
 
     var nodtst = databases.db("moverzFax");
-    nodtst.collection("movers").find({}).toArray(function(err, totalposts) {
+    nodtst.collection("movers").find({}).toArray(function(err, totalmovers) {
       if (err) throw err;
 
-      for (i = 0; i < totalposts.length; i++) {
-        let post = totalposts[i];
-        console.log(post.moverDescription + ", " + post.moverDescription);
+      for (i = 0; i < totalmovers.length; i++) {
+        let mover = totalmovers[i];
+        console.log(mover.moverDescription + ", " + mover.moverDescription);
       }
-      res.send(totalposts);
+      res.send(totalmovers);
 
       //console.log(result);
       databases.close();

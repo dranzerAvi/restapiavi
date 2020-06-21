@@ -8,7 +8,11 @@
   "moverPhno": "+917060222315",
   "moverRating": "5",
   "moverMCNo": "234555",
-  "moverDescription": "Best Movers In Town"
+  "moverDescription": "Best Movers In Town",
+  "moverCountry":"USA",
+  "moverState":"New Mexico",
+  "moverCity":"Los Santos",
+  "moverZipCode":"243001"
 },
 {
 "_id": {
@@ -19,7 +23,11 @@
 "moverPhno": "+917060222315",
 "moverRating": "4.5",
 "moverMCNo": "234532455",
-"moverDescription": "Best Movers In Town"
+"moverDescription": "Best Movers In Town",
+"moverCountry":"USA",
+"moverState":"New Mexico",
+"moverCity":"Los Santos",
+  "moverZipCode":"243001"
 },
 {
 "_id": {
@@ -30,7 +38,11 @@
 "moverPhno": "+917060222315",
 "moverRating": "3",
 "moverMCNo": "23466555",
-"moverDescription": "Best Movers In Town"
+"moverDescription": "Best Movers In Town",
+"moverCountry":"USA",
+"moverState":"New Mexico",
+"moverCity":"Los Santos",
+  "moverZipCode":"243001"
 },
 {
 "_id": {
@@ -41,7 +53,11 @@
 "moverPhno": "+917060222315",
 "moverRating": "3.5",
 "moverMCNo": "2341555",
-"moverDescription": "Best Movers In Town"
+"moverDescription": "Best Movers In Town",
+"moverCountry":"USA",
+  "moverState":"New Mexico",
+  "moverCity":"Los Santos",
+    "moverZipCode":"243001"
 },
 {
 "_id": {
@@ -52,7 +68,11 @@
 "moverPhno": "+917060222315",
 "moverRating": "5",
 "moverMCNo": "234511155",
-"moverDescription": "Best Movers In Town"
+"moverDescription": "Best Movers In Town",
+"moverCountry":"USA",
+"moverState":"New Mexico",
+"moverCity":"Los Santos",
+  "moverZipCode":"243001"
 },
 {
 "_id": {
@@ -63,6 +83,10 @@
 "moverPhno": "+917060222315",
 "moverRating": "2",
 "moverMCNo": "234521155",
-"moverDescription": "Best Movers In Town"
+"moverDescription": "Best Movers In Town",
+"moverCountry":"USA",
+"moverState":"New Mexico",
+"moverCity":"Los Santos",
+"moverZipCode":"243001"
 }
 ]

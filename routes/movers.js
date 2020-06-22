@@ -5,8 +5,8 @@ const Post = require('../models/Post');
 var mongodb = require('mongodb');
 
 var mongoClient = mongodb.MongoClient;
-var url = "mongodb://localhost:27017/";
-
+// var url = "mongodb://localhost:27017/";
+var url = "mongodb+srv://shubhsaras:shubhsaras38@moverzfax.2op18.mongodb.net/<dbname>?retryWrites=true&w=majority";
 //Basic root route
 router.get('/', (req, res) => {
   res.send('We are on posts');

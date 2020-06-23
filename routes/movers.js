@@ -9,7 +9,7 @@ var mongoClient = mongodb.MongoClient;
 var url = "mongodb+srv://shubhsaras:shubhsaras38@moverzfax.2op18.mongodb.net/<dbname>?retryWrites=true&w=majority";
 //Basic root route
 router.get('/', (req, res) => {
-  res.send('We are on posts');
+  res.send('We are on movers');
 });
 
 
